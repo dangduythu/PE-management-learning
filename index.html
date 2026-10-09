@@ -1,0 +1,95 @@
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1">
+  <title>PE Management V1.0</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f3f6fb;
+      padding: 24px;
+      color: #172b4d;
+    }
+    .app {
+      max-width: 650px;
+      margin: auto;
+      background: white;
+      padding: 24px;
+      border-radius: 12px;
+      box-shadow: 0 4px 16px #0001;
+    }
+    input, button {
+      padding: 12px;
+      margin: 6px 0;
+      width: 100%;
+      box-sizing: border-box;
+    }
+    button {
+      background: #1464b4;
+      color: white;
+      border: 0;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    .result {
+      margin-top: 20px;
+      padding: 16px;
+      background: #e8f3ff;
+      border-radius: 8px;
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <h1>PE Management V1.0</h1>
+    <p>Production Yield Calculator</p>
+
+    <label>Total Input</label>
+    <input id="total" type="number"
+           min="1" placeholder="Nhập tổng sản lượng">
+
+    <label>Good Quantity</label>
+    <input id="good" type="number"
+           min="0" placeholder="Nhập số lượng OK">
+
+    <button onclick="calculate()">
+      Calculate Yield
+    </button>
+
+    <div class="result" id="result">
+      Chưa có kết quả
+    </div>
+  </div>
+
+  <script>
+    function calculate() {
+      const total = Number(
+        document.getElementById("total").value
+      );
+      const good = Number(
+        document.getElementById("good").value
+      );
+
+      if (!Number.isFinite(total) ||
+          !Number.isFinite(good) ||
+          total <= 0 || good < 0 ||
+          good > total ||
+          !document.getElementById("total").value ||
+          !document.getElementById("good").value) {
+        alert("Vui lòng kiểm tra số liệu!");
+        return;
+      }
+
+      const yieldRate = good / total * 100;
+      const ng = total - good;
+
+      document.getElementById("result").innerHTML =
+        "Yield: <b>" + yieldRate.toFixed(2) +
+        "%</b><p>NG Quantity: " + ng + "</p>";
+    }
+  </script>
+</body>
+</html>
