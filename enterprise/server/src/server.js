@@ -123,6 +123,54 @@ app.post("/api/issues/:id/archive",hasRole("leader","manager"),asyncRoute(async(
     return r.rows[0];
   });if(!outcome)return res.status(404).json({error:"Issue not found"});res.json(outcome);
 }));
+
+const inspectionInput=z.object({templateName:z.string().trim().min(1).max(160),line:z.string().trim().min(1).max(80),productionDate:z.string().regex(/^\d{4}-\d{2}-\d{2}$/),results:z.array(z.object({item:z.string().trim().min(1).max(200),result:z.enum(["OK","NG","NA"]),value:z.union([z.string().max(1000),z.number()]).optional(),standard:z.string().max(500).optional()})).min(1).max(300)});
+app.post("/api/inspections",hasRole("technician","engineer","leader","manager"),asyncRoute(async(req,res)=>{
+ const p=inspectionInput.safeParse(req.body);if(!p.success)return res.status(400).json({error:p.error.flatten()});
+ const d=p.data,ng=d.results.filter(x=>x.result==="NG"),inspectionId=randomUUID();
+ const issueIds=await transaction(async c=>{
+   await c.query("INSERT INTO inspections(id,performed_by,template_name,line,production_date,result,results) VALUES($1,$2,$3,$4,$5,$6,$7::jsonb)",[inspectionId,req.actor,d.templateName,d.line,d.productionDate,ng.length?"NG":"OK",JSON.stringify(d.results)]);
+   const ids=[];
+   for(const item of ng){const issueId=randomUUID();await c.query("INSERT INTO issues(id,inspection_id,title,line) VALUES($1,$2,$3,$4)",[issueId,inspectionId,item.item,d.line]);ids.push(issueId);}
+   await addAudit(c,req.actor,"inspection",inspectionId,"created",{ng:ng.length,issues:ids});
+   return ids;
+ });
+ res.status(201).json({id:inspectionId,result:ng.length?"NG":"OK",issueIds});
+}));
+app.get("/api/inspections",hasRole("technician","engineer","leader","manager"),asyncRoute(async(req,res)=>{
+ const privileged=req.roles.some(r=>["leader","manager"].includes(r));
+ const {rows}=await pool.query("SELECT id,performed_by,template_name,line,production_date,result,created_at FROM inspections "+(privileged?"":"WHERE performed_by=$1")+" ORDER BY created_at DESC LIMIT 500",privileged?[]:[req.actor]);
+ res.json({items:rows});
+}));
+const productionInput=z.object({date:z.string().regex(/^\d{4}-\d{2}-\d{2}$/),project:z.string().trim().min(1).max(120),line:z.string().trim().min(1).max(80),lot:z.string().trim().min(1).max(120),total:z.number().int().positive(),good:z.number().int().min(0),defect:z.string().max(120).optional(),defectCount:z.number().int().min(0).default(0)});
+app.post("/api/production",hasRole("engineer","leader","manager"),asyncRoute(async(req,res)=>{
+ const p=productionInput.safeParse(req.body);if(!p.success)return res.status(400).json({error:p.error.flatten()});
+ const d=p.data;if(d.good>d.total||d.defectCount>d.total-d.good)return res.status(400).json({error:"Invalid quantities"});
+ const id=randomUUID();
+ await transaction(async c=>{await c.query("INSERT INTO production_records(id,production_date,project,line,lot,total_qty,good_qty,defect,defect_qty,entered_by) VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)",[id,d.date,d.project,d.line,d.lot,d.total,d.good,d.defect||null,d.defectCount,req.actor]);await addAudit(c,req.actor,"production",id,"created",{project:d.project,line:d.line});});
+ res.status(201).json({id});
+}));
+app.get("/api/production",hasRole("engineer","leader","manager"),asyncRoute(async(req,res)=>{
+ const {rows}=await pool.query("SELECT id,production_date,project,line,lot,total_qty,good_qty,defect,defect_qty FROM production_records ORDER BY production_date DESC,created_at DESC LIMIT 1000");
+ res.json({items:rows});
+}));
+app.get("/api/yield",hasRole("engineer","leader","manager"),asyncRoute(async(req,res)=>{
+ const {rows}=await pool.query("SELECT line,SUM(total_qty)::bigint AS total_qty,SUM(good_qty)::bigint AS good_qty,ROUND(100.0*SUM(good_qty)/NULLIF(SUM(total_qty),0),2) AS weighted_yield FROM production_records GROUP BY line ORDER BY line");
+ res.json({items:rows});
+}));
+const improvementInput=z.object({title:z.string().trim().min(1).max(250),process:z.string().max(120).default(""),ownerId:z.string().min(1),beforeLoss:z.number().min(0).max(100).nullable().optional(),afterLoss:z.number().min(0).max(100).nullable().optional(),dueDate:z.string().regex(/^\d{4}-\d{2}-\d{2}$/).nullable().optional(),evidence:z.string().max(20000).default("")});
+app.post("/api/improvements",hasRole("engineer","leader","manager"),asyncRoute(async(req,res)=>{
+ const p=improvementInput.safeParse(req.body);if(!p.success)return res.status(400).json({error:p.error.flatten()});
+ const d=p.data,id=randomUUID();
+ await transaction(async c=>{
+   await c.query("INSERT INTO improvement_actions(id,title,process,owner_id,before_loss,after_loss,due_date,evidence) VALUES($1,$2,$3,$4,$5,$6,$7,$8)",[id,d.title,d.process,d.ownerId,d.beforeLoss??null,d.afterLoss??null,d.dueDate??null,d.evidence]);
+   await addAudit(c,req.actor,"improvement",id,"created",{ownerId:d.ownerId});
+ });res.status(201).json({id});
+}));
+app.get("/api/improvements",hasRole("engineer","leader","manager"),asyncRoute(async(req,res)=>{
+ const {rows}=await pool.query("SELECT * FROM improvement_actions ORDER BY created_at DESC LIMIT 500");res.json({items:rows});
+}));
+
 app.use((err,_req,res,_next)=>{console.error("API error",err);res.status(err.status||500).json({error:err.status?err.message:"Internal server error"});});
 const server=app.listen(Number(process.env.PORT||8080),()=>console.log("PE API listening"));
 async function shutdown(){server.close();await pool.end();}
