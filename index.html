@@ -1,95 +1,57 @@
-
-<!DOCTYPE html>
+<!doctype html>
 <html lang="vi">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport"
-        content="width=device-width, initial-scale=1">
-  <title>PE Management V1.0</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f3f6fb;
-      padding: 24px;
-      color: #172b4d;
-    }
-    .app {
-      max-width: 650px;
-      margin: auto;
-      background: white;
-      padding: 24px;
-      border-radius: 12px;
-      box-shadow: 0 4px 16px #0001;
-    }
-    input, button {
-      padding: 12px;
-      margin: 6px 0;
-      width: 100%;
-      box-sizing: border-box;
-    }
-    button {
-      background: #1464b4;
-      color: white;
-      border: 0;
-      border-radius: 6px;
-      cursor: pointer;
-    }
-    .result {
-      margin-top: 20px;
-      padding: 16px;
-      background: #e8f3ff;
-      border-radius: 8px;
-    }
-  </style>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#0b1730">
+<title>PE Management V2.0 • Production Dashboard</title>
+<style>
+:root{font-family:Inter,'Segoe UI',Arial,sans-serif;color:#182a45;background:#f3f6fb;--blue:#2458dc;--border:#e1e7f0;--muted:#697991}*{box-sizing:border-box}body{margin:0}button,input,select{font:inherit}button{cursor:pointer}button:disabled{opacity:.45;cursor:not-allowed}.app{display:flex;min-height:100vh}.side{width:248px;flex-shrink:0;background:#0d1c37;color:#d7e2f4;padding:25px 16px;display:flex;flex-direction:column;gap:26px}.brand{padding:0 12px;font-size:19px;font-weight:800;letter-spacing:.2px;color:#fff}.brand small{display:block;color:#96b1d6;font-size:11px;letter-spacing:2px;margin-top:6px}.nav{display:grid;gap:6px}.nav button{width:100%;text-align:left;border:0;border-radius:10px;padding:13px 14px;background:transparent;color:#cbd8ef}.nav button.active,.nav button:hover{background:#204078;color:#fff}.sidefoot{margin-top:auto;font-size:12px;color:#8c9ebc;line-height:1.6;padding:12px}.main{min-width:0;flex:1;padding:31px clamp(15px,3vw,43px);max-width:1600px}.head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:23px;flex-wrap:wrap}.head h1{margin:0;font-size:27px}.muted{color:var(--muted);font-size:13px}.tag{background:#e6efff;color:#1748b9;padding:8px 13px;border-radius:20px;font-weight:700;font-size:12px}.panel{background:#fff;border:1px solid var(--border);border-radius:15px;padding:21px;box-shadow:0 4px 20px #15326808}.section{display:none}.section.active{display:block}.grid{display:grid;gap:16px}.metrics{grid-template-columns:repeat(4,minmax(0,1fr));margin-bottom:17px}.metric .value{font-size:31px;font-weight:800;margin:14px 0 5px;color:#102a50}.metric .label{font-size:13px;color:var(--muted)}.twocol{grid-template-columns:minmax(0,1.1fr) minmax(0,1fr)}h2{font-size:18px;margin:0 0 8px}p{line-height:1.5}.controls{display:flex;flex-wrap:wrap;gap:12px;margin:0 0 17px}.field{display:grid;gap:7px}.field label{font-size:13px;font-weight:650;color:#43536b}.field input,.field select{height:40px;border:1px solid #cdd7e5;border-radius:8px;background:#fff;padding:8px 10px;color:#183050;min-width:0}.field input:focus,.field select:focus{outline:2px solid #a7c3ff;border-color:#6c9dff}.controls .field{min-width:140px}.btn{background:var(--blue);border:1px solid var(--blue);color:#fff;border-radius:9px;padding:11px 15px;font-weight:700}.btn.secondary{background:#fff;color:#294b89;border-color:#cbd6e6}.btn.danger{color:#b52138;background:#fff;border-color:#f2bac1}.btn.small{padding:6px 10px;font-size:12px}.toolbar{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin:12px 0}.formgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:15px}.actions{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:20px}.notice{border-radius:8px;padding:12px 14px;background:#eaf4ff;color:#29527b;font-size:13px;line-height:1.5}.notice.error{background:#fff0f1;color:#a52638}.tablewrap{overflow:auto;border:1px solid var(--border);border-radius:11px}table{border-collapse:collapse;width:100%;min-width:760px}th,td{padding:12px;text-align:left;border-bottom:1px solid #edf1f6;font-size:13px}th{background:#f7f9fd;color:#52617b;font-weight:750}tr:last-child td{border-bottom:0}.right{text-align:right}.pill{display:inline-block;padding:4px 9px;border-radius:40px;background:#ecf3ff;color:#194a9d;font-size:12px}.empty{text-align:center;padding:32px;color:var(--muted)}.chart{width:100%;min-height:250px}.barline{display:grid;grid-template-columns:100px minmax(0,1fr) 55px;align-items:center;gap:10px;margin:16px 0;font-size:13px}.track{height:15px;background:#ecf1fb;border-radius:8px;overflow:hidden}.fill{height:100%;border-radius:8px;background:linear-gradient(90deg,#2e72ee,#52a7fd)}.pareto{display:flex;align-items:end;gap:12px;min-height:240px;padding:20px 9px 0;border-bottom:1px solid #cad4e4}.paretoitem{flex:1;display:flex;min-width:0;flex-direction:column;align-items:center;justify-content:end;gap:8px;height:215px;text-align:center}.paretobar{width:70%;max-width:70px;background:linear-gradient(180deg,#4b83f3,#204fc4);border-radius:6px 6px 0 0;min-height:1px}.paretolabel{font-size:11px;color:#51617d;overflow-wrap:anywhere;height:36px;max-width:100%}.legend{font-size:12px;color:var(--muted);margin-top:15px}.mini{font-size:12px;color:var(--muted)}.menu-button{display:none}.hide{display:none!important}@media(max-width:1000px){.metrics{grid-template-columns:repeat(2,minmax(0,1fr))}.twocol{grid-template-columns:1fr}}@media(max-width:750px){.app{display:block}.side{width:100%;padding:15px;gap:9px}.brand{font-size:17px}.sidefoot{display:none}.nav{display:flex;overflow-x:auto;gap:6px}.nav button{white-space:nowrap;width:auto;padding:10px}.main{padding:18px 12px}.head h1{font-size:22px}.formgrid{grid-template-columns:1fr 1fr}}@media(max-width:460px){.metrics,.formgrid{grid-template-columns:1fr}.metric .value{font-size:26px}.panel{padding:15px}.head h1{font-size:20px}}
+</style>
 </head>
 <body>
-  <div class="app">
-    <h1>PE Management V1.0</h1>
-    <p>Production Yield Calculator</p>
-
-    <label>Total Input</label>
-    <input id="total" type="number"
-           min="1" placeholder="Nhập tổng sản lượng">
-
-    <label>Good Quantity</label>
-    <input id="good" type="number"
-           min="0" placeholder="Nhập số lượng OK">
-
-    <button onclick="calculate()">
-      Calculate Yield
-    </button>
-
-    <div class="result" id="result">
-      Chưa có kết quả
-    </div>
-  </div>
-
-  <script>
-    function calculate() {
-      const total = Number(
-        document.getElementById("total").value
-      );
-      const good = Number(
-        document.getElementById("good").value
-      );
-
-      if (!Number.isFinite(total) ||
-          !Number.isFinite(good) ||
-          total <= 0 || good < 0 ||
-          good > total ||
-          !document.getElementById("total").value ||
-          !document.getElementById("good").value) {
-        alert("Vui lòng kiểm tra số liệu!");
-        return;
-      }
-
-      const yieldRate = good / total * 100;
-      const ng = total - good;
-
-      document.getElementById("result").innerHTML =
-        "Yield: <b>" + yieldRate.toFixed(2) +
-        "%</b><p>NG Quantity: " + ng + "</p>";
-    }
-  </script>
-</body>
-</html>
+<div class="app">
+<aside class="side"><div class="brand">◈ PE MANAGEMENT<small>PRODUCTION INTELLIGENCE</small></div><nav class="nav" aria-label="Điều hướng"><button class="active" data-page="dashboard">▦ &nbsp;Dashboard</button><button data-page="entry">✎ &nbsp;Production Data</button><button data-page="yield">▥ &nbsp;Yield Analysis</button><button data-page="defects">◫ &nbsp;Defect Analysis</button><button data-page="history">▤ &nbsp;Data History</button></nav><div class="sidefoot">V2.0 • Browser-only demo<br>Data stored on this browser only.</div></aside>
+<main class="main"><header class="head"><div><h1 id="pageTitle">Production Dashboard</h1><div class="muted">Process Engineering • Local browser workspace</div></div><span class="tag">● V2.0</span></header>
+<section id="dashboard" class="section active"><div class="controls"><div class="field"><label for="dashLine">Line</label><select id="dashLine"><option value="">All Lines</option><option>Line 1</option><option>Line 2</option><option>Line 3</option><option>Line 4</option></select></div><div class="field"><label for="dashFrom">Từ ngày</label><input type="date" id="dashFrom"></div><div class="field"><label for="dashTo">Đến ngày</label><input type="date" id="dashTo"></div><div class="field"><label>&nbsp;</label><button class="btn secondary" id="clearDash">Reset filters</button></div></div><div class="grid metrics"><div class="panel metric"><div class="label">Weighted Yield</div><div class="value" id="mYield">—</div><div class="mini">Σ Good / Σ Input</div></div><div class="panel metric"><div class="label">Total Input</div><div class="value" id="mInput">—</div><div class="mini">Units</div></div><div class="panel metric"><div class="label">NG Quantity</div><div class="value" id="mNG">—</div><div class="mini">Input − Good</div></div><div class="panel metric"><div class="label">NG Rate</div><div class="value" id="mRate">—</div><div class="mini">Σ NG / Σ Input</div></div></div><div class="grid twocol"><div class="panel"><h2>Yield by Line</h2><div class="muted">Weighted by input quantity</div><div class="chart" id="dashYield"></div></div><div class="panel"><h2>Top defect categories</h2><div class="muted">Defect counts entered per batch</div><div class="chart" id="dashDefects"></div></div></div><p class="notice" style="margin-top:17px">Dữ liệu lưu duy nhất trong trình duyệt này (localStorage). Không tự đồng bộ, không sao lưu trên GitHub và không phù hợp để lưu thông tin mật của công ty. Chỉ nhập dữ liệu giả lập đến khi IT phê duyệt.</p></section>
+<section id="entry" class="section"><div class="panel"><h2 id="formTitle">Add production record</h2><p class="muted">Mỗi bản ghi là một Lot / Line / ngày. Số lỗi theo loại không được vượt tổng NG.</p><form id="recordForm"><div class="formgrid"><div class="field"><label for="fDate">Production Date *</label><input id="fDate" type="date" required></div><div class="field"><label for="fLine">Line *</label><select id="fLine" required><option>Line 1</option><option>Line 2</option><option>Line 3</option><option>Line 4</option></select></div><div class="field"><label for="fLot">Lot ID *</label><input id="fLot" maxlength="50" required placeholder="DEMO-LOT-001"></div><div class="field"><label for="fInput">Total Input *</label><input id="fInput" type="number" min="1" max="1000000000" step="1" required></div><div class="field"><label for="fGood">Good Quantity *</label><input id="fGood" type="number" min="0" max="1000000000" step="1" required></div><div class="field"><label for="fContamination">Contamination</label><input id="fContamination" type="number" min="0" step="1" value="0"></div><div class="field"><label for="fScratch">Scratch</label><input id="fScratch" type="number" min="0" step="1" value="0"></div><div class="field"><label for="fIncomplete">Incomplete</label><input id="fIncomplete" type="number" min="0" step="1" value="0"></div><div class="field"><label for="fOther">Other defects</label><input id="fOther" type="number" min="0" step="1" value="0"></div></div><div id="formError" role="alert" class="notice error hide" style="margin-top:17px"></div><div class="actions"><button class="btn" type="submit" id="submitBtn">Save Record</button><button class="btn secondary" type="button" id="cancelEdit">Clear Form</button></div></form></div></section>
+<section id="yield" class="section"><div class="panel"><h2>Yield Analysis</h2><p class="muted">Tính Yield theo tổng số lượng đầu vào của từng Line, không lấy trung bình đơn giản giữa các Lot.</p><div id="yieldReport" class="chart"></div></div></section>
+<section id="defects" class="section"><div class="panel"><h2>Defect Pareto</h2><p class="muted">Phân bố số lượng lỗi theo từng nhóm; dữ liệu lấy từ các bản ghi Production Data.</p><div id="paretoReport"></div></div></section>
+<section id="history" class="section"><div class="panel"><div class="toolbar"><div><h2>Data History</h2><div class="muted" id="countRecords">0 records</div></div><div class="actions" style="margin:0"><button class="btn secondary" id="exportCsv">↓ Export CSV</button><button class="btn secondary" id="loadDemo">＋ Load demo data</button><button class="btn danger" id="clearAll">Delete all</button></div></div><div class="controls"><div class="field"><label for="filterLine">Line</label><select id="filterLine"><option value="">All Lines</option><option>Line 1</option><option>Line 2</option><option>Line 3</option><option>Line 4</option></select></div><div class="field"><label for="filterSearch">Search Lot</label><input id="filterSearch" placeholder="Find a Lot..."></div></div><div class="tablewrap"><table><thead><tr><th>Date</th><th>Line</th><th>Lot</th><th class="right">Input</th><th class="right">Good</th><th class="right">NG</th><th class="right">Yield</th><th>Actions</th></tr></thead><tbody id="historyRows"></tbody></table></div></div></section>
+</main></div>
+<script>
+'use strict';
+const KEY='pe-management-v2-records';
+const TYPES=['Contamination','Scratch','Incomplete','Other'];
+const $=id=>document.getElementById(id);
+const format=n=>new Intl.NumberFormat('en-US').format(n);
+const pct=(n,d)=>d?`${(100*n/d).toFixed(2)}%`:'—';
+const escapeHtml=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+let records=[];let editingId=null;
+function readStorage(){try{const v=JSON.parse(localStorage.getItem(KEY)||'[]');return Array.isArray(v)?v.filter(x=>x&&typeof x==='object'&&typeof x.id==='string'&&Number.isFinite(x.input)&&Number.isFinite(x.good)&&x.input>0&&x.good>=0&&x.good<=x.input):[]}catch(e){alert('Không đọc được dữ liệu đã lưu. Bạn có thể cần kiểm tra bộ nhớ trình duyệt.');return[]}}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(records));return true}catch(e){alert('Không thể lưu dữ liệu. Bộ nhớ trình duyệt có thể đầy hoặc bị chặn.');return false}}
+records=readStorage();
+function showPage(page){document.querySelectorAll('.section').forEach(e=>e.classList.toggle('active',e.id===page));document.querySelectorAll('.nav button').forEach(e=>e.classList.toggle('active',e.dataset.page===page));const names={dashboard:'Production Dashboard',entry:'Production Data',yield:'Yield Analysis',defects:'Defect Analysis',history:'Data History'};$('pageTitle').textContent=names[page];render()}
+document.querySelectorAll('.nav button').forEach(b=>b.addEventListener('click',()=>showPage(b.dataset.page)));
+function validInt(v){return /^\d+$/.test(String(v).trim())&&Number.isSafeInteger(Number(v))}
+function error(message){$('formError').textContent=message;$('formError').classList.remove('hide')}
+function resetForm(){$('recordForm').reset();editingId=null;$('formTitle').textContent='Add production record';$('submitBtn').textContent='Save Record';$('formError').classList.add('hide');$('fDate').value=new Date().toLocaleDateString('en-CA');['fContamination','fScratch','fIncomplete','fOther'].forEach(id=>$(id).value='0')}
+$('cancelEdit').addEventListener('click',resetForm);
+$('recordForm').addEventListener('submit',e=>{e.preventDefault();$('formError').classList.add('hide');let input=$('fInput').value,good=$('fGood').value;const vals=['fContamination','fScratch','fIncomplete','fOther'].map(id=>$(id).value.trim()===''?'0':$(id).value);if(!validInt(input)||!validInt(good)||Number(input)>1e9||Number(input)<1||Number(good)>Number(input)){error('Input và Good phải là số nguyên hợp lệ, 0 ≤ Good ≤ Input ≤ 1.000.000.000.');return}if(vals.some(v=>!validInt(v))){error('Số lượng lỗi phải là số nguyên không âm.');return}const defects=Object.fromEntries(TYPES.map((k,i)=>[k,Number(vals[i])]));const ng=Number(input)-Number(good);if(Object.values(defects).reduce((a,b)=>a+b,0)>ng){error('Tổng lỗi theo loại không được lớn hơn NG = Input − Good.');return}const date=$('fDate').value,lot=$('fLot').value.trim(),line=$('fLine').value;if(!/^\d{4}-\d{2}-\d{2}$/.test(date)||!lot||lot.length>50){error('Vui lòng nhập ngày và Lot ID hợp lệ.');return}const item={id:editingId||('r-'+Date.now()+'-'+Math.random().toString(36).slice(2)),date,line,lot,input:Number(input),good:Number(good),defects};const old=records;if(editingId)records=records.map(r=>r.id===editingId?item:r);else records=[item,...records];if(!save()){records=old;return}resetForm();showPage('history')});
+function totals(data){return data.reduce((a,r)=>{a.input+=r.input;a.good+=r.good;for(const t of TYPES)a.defects[t]+=Number(r.defects?.[t]||0);return a},{input:0,good:0,defects:Object.fromEntries(TYPES.map(t=>[t,0]))})}
+function lineSummary(data){return ['Line 1','Line 2','Line 3','Line 4'].map(line=>({line,...totals(data.filter(r=>r.line===line))})).filter(x=>x.input>0)}
+function lineBars(data){const lines=lineSummary(data);return lines.length?lines.map(x=>`<div class="barline"><strong>${escapeHtml(x.line)}</strong><div class="track"><div class="fill" style="width:${Math.min(100,100*x.good/x.input)}%"></div></div><strong>${pct(x.good,x.input)}</strong></div>`).join(''):'<div class="empty">Chưa có dữ liệu. Hãy nhập bản ghi hoặc tải dữ liệu demo.</div>'}
+function defectsSummary(data){return Object.entries(totals(data).defects).filter(x=>x[1]>0).sort((a,b)=>b[1]-a[1])}
+function simpleDefects(data){const list=defectsSummary(data),max=Math.max(1,...list.map(x=>x[1]));return list.length?list.map(([k,v])=>`<div class="barline"><span>${k}</span><div class="track"><div class="fill" style="width:${100*v/max}%"></div></div><strong>${format(v)}</strong></div>`).join(''):'<div class="empty">Chưa có số liệu lỗi phân loại.</div>'}
+function renderDashboard(){const line=$('dashLine').value,from=$('dashFrom').value,to=$('dashTo').value;const data=records.filter(r=>(!line||r.line===line)&&(!from||r.date>=from)&&(!to||r.date<=to));const t=totals(data);$('mYield').textContent=pct(t.good,t.input);$('mInput').textContent=format(t.input);$('mNG').textContent=format(t.input-t.good);$('mRate').textContent=pct(t.input-t.good,t.input);$('dashYield').innerHTML=lineBars(data);$('dashDefects').innerHTML=simpleDefects(data)}
+function renderPareto(){const list=defectsSummary(records),sum=list.reduce((s,x)=>s+x[1],0),max=Math.max(1,...list.map(x=>x[1]));if(!list.length){$('paretoReport').innerHTML='<div class="empty">Chưa có số liệu lỗi phân loại.</div>';return}let cumulative=0;const bars=list.map(([k,n])=>{cumulative+=n;return `<div class="paretoitem"><strong class="mini">${format(n)}</strong><div class="paretobar" style="height:${Math.max(2,120*n/max)}px"></div><span class="paretolabel">${escapeHtml(k)}</span></div>`}).join('');let cumul=0;const rows=list.map(([k,n])=>{cumul+=n;return `<tr><td>${escapeHtml(k)}</td><td class="right">${format(n)}</td><td class="right">${(100*n/sum).toFixed(1)}%</td><td class="right">${(100*cumul/sum).toFixed(1)}%</td></tr>`}).join('');$('paretoReport').innerHTML=`<div class="pareto">${bars}</div><p class="legend">Defect quantities by category (descending). Total categorized: ${format(sum)}. Uncategorized NG not included.</p><div class="tablewrap"><table style="min-width:450px"><thead><tr><th>Defect</th><th class="right">Qty</th><th class="right">Share</th><th class="right">Cumulative</th></tr></thead><tbody>${rows}</tbody></table></div>`}
+function renderHistory(){const search=$('filterSearch').value.trim().toLowerCase(),line=$('filterLine').value;const filtered=records.filter(r=>(!line||r.line===line)&&(!search||String(r.lot).toLowerCase().includes(search))).sort((a,b)=>b.date.localeCompare(a.date));$('countRecords').textContent=`${filtered.length} / ${records.length} records`;$('historyRows').innerHTML=filtered.length?filtered.map(r=>`<tr><td>${escapeHtml(r.date)}</td><td>${escapeHtml(r.line)}</td><td><span class="pill">${escapeHtml(r.lot)}</span></td><td class="right">${format(r.input)}</td><td class="right">${format(r.good)}</td><td class="right">${format(r.input-r.good)}</td><td class="right"><b>${pct(r.good,r.input)}</b></td><td><button class="btn secondary small" data-edit="${escapeHtml(r.id)}">Edit</button> <button class="btn danger small" data-delete="${escapeHtml(r.id)}">Delete</button></td></tr>`).join(''):'<tr><td colspan="8" class="empty">Không tìm thấy bản ghi.</td></tr>'}
+function render(){renderDashboard();$('yieldReport').innerHTML=lineBars(records);renderPareto();renderHistory()}
+$('historyRows').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;const id=b.dataset.edit||b.dataset.delete,r=records.find(x=>x.id===id);if(!r)return;if(b.dataset.delete){if(!confirm(`Xóa bản ghi ${r.lot} (${r.date})?`))return;const old=records;records=records.filter(x=>x.id!==id);if(!save())records=old;render();return}editingId=r.id;$('fDate').value=r.date;$('fLine').value=r.line;$('fLot').value=r.lot;$('fInput').value=r.input;$('fGood').value=r.good;['fContamination','fScratch','fIncomplete','fOther'].forEach((field,i)=>$(field).value=r.defects?.[TYPES[i]]||0);$('formTitle').textContent='Edit production record';$('submitBtn').textContent='Update Record';$('formError').classList.add('hide');showPage('entry');window.scrollTo({top:0,behavior:'smooth'})});
+['dashLine','dashFrom','dashTo'].forEach(id=>$(id).addEventListener('change',renderDashboard));$('clearDash').addEventListener('click',()=>{['dashLine','dashFrom','dashTo'].forEach(id=>$(id).value='');renderDashboard()});['filterLine','filterSearch'].forEach(id=>$(id).addEventListener('input',renderHistory));
+$('clearAll').addEventListener('click',()=>{if(!records.length)return;if(!confirm(`Xóa TOÀN BỘ ${records.length} bản ghi trên trình duyệt này? Không thể hoàn tác.`))return;const old=records;records=[];if(!save())records=old;render()});
+function demo(){const date=new Date().toLocaleDateString('en-CA');return [[1,10000,9750,80,50,40,30],[2,12000,11400,180,130,90,60],[3,9000,8820,50,40,40,25],[4,11000,10780,75,55,35,30]].map(([line,input,good,c,s,i,o])=>({id:'demo-'+Date.now()+'-'+line,date,line:'Line '+line,lot:'DEMO-'+line+'-001',input,good,defects:{Contamination:c,Scratch:s,Incomplete:i,Other:o}}))}
+$('loadDemo').addEventListener('click',()=>{if(!confirm('Thêm 4 bản ghi dữ liệu giả lập DEMO vào lịch sử?'))return;const old=records;records=[...demo(),...records];if(!save())records=old;render()});
+function csvCell(v){let s=String(v??'');if(/^[\s]*[=+@\-]/.test(s))s="'"+s;return '"'+s.replace(/"/g,'""')+'"'}
+$('exportCsv').addEventListener('click',()=>{if(!records.length){alert('Chưa có dữ liệu để xuất.');return}const columns=['Date','Line','Lot','Input','Good','NG','Yield (%)',...TYPES];const lines=[columns,...records.map(r=>[r.date,r.line,r.lot,r.input,r.good,r.input-r.good,(100*r.good/r.input).toFixed(2),...TYPES.map(t=>r.defects?.[t]||0)])];const csv='\ufeff'+lines.map(row=>row.map(csvCell).join(',')).join('\r\n');const url=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8;'}));const a=document.createElement('a');a.href=url;a.download='PE-Management-V2-Data.csv';document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),2000)});
+resetForm();render();
+</script>
+</body></html>
