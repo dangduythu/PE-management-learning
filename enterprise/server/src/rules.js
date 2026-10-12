@@ -1,0 +1,4 @@
+export function authorizeReview({task,actor,roles}){if(task.owner_id===actor)return {ok:false,reason:"Self approval prohibited"};if(task.status==="Pending leader"&&roles.includes("leader"))return {ok:true,stage:"leader"};if(task.status==="Pending manager"&&roles.includes("manager"))return {ok:true,stage:"manager"};return {ok:false,reason:"Wrong approval level"}}
+export function canUpdateTask({task,actor}){return task.owner_id===actor&&["Not started","In progress","Rejected"].includes(task.status)}
+export function nextReviewStatus(stage,decision){if(decision==="reject")return "Rejected";return stage==="leader"?"Pending manager":"Reviewed"}
+export function validProduction({total,good,defectCount=0}){return Number.isSafeInteger(total)&&total>0&&Number.isSafeInteger(good)&&good>=0&&good<=total&&Number.isSafeInteger(defectCount)&&defectCount>=0&&defectCount<=total-good}
